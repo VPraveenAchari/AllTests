@@ -1,6 +1,4 @@
-﻿
-
-using AllTests.Utilities;
+﻿using AllTests.Utilities;
 using OpenQA.Selenium;
 
 namespace AllTests.Tests

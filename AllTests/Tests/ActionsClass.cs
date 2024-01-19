@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using AllTests.Utilities;
-using AngleSharp.Dom;
-using NUnit.Allure.Attributes;
 using NUnit.Allure.Core;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
-using WebDriverManager.DriverConfigs.Impl;
 
 namespace AllTests.Tests
 {
