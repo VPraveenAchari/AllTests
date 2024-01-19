@@ -1,0 +1,210 @@
+﻿-----------------POMclass-----------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OpenQA.Selenium;
+using SeleniumExtras.PageObjects;
+
+namespace RedbusProject.PageObject
+{
+    public class POMClass
+    {
+        IWebDriver driver;
+        public POMClass(IWebDriver driver) 
+        {
+            this.driver = driver;
+            PageFactory.InitElements(driver, this);
+        }
+        [FindsBy(How = How.XPath,Using = "//input[@id='src']")]
+        IWebElement From;
+        [FindsBy(How = How.XPath, Using = "//text[text()='Bangalore']")]
+        IWebElement FromLocation;
+        [FindsBy(How = How.XPath, Using = "//input[@type='text']")]
+        IWebElement To;
+        [FindsBy(How = How.XPath, Using = "//text[text()='Kurnool']")]
+        IWebElement ToLocation;
+        [FindsBy(How = How.XPath, Using = "//div[@class='DatePicker__MainBlock-sc-1kf43k8-1 hHKFiR']//child::div[@class='DayNavigator__IconBlock-qj8jdz-2 iZpveD'][3]")]
+        IWebElement DateButton;
+        [FindsBy(How = How.XPath, Using = "//span[text()='12']")]
+        IWebElement DatePick;
+        [FindsBy(How = How.XPath, Using = "//button[@id='search_button']")]
+        IWebElement Searchbutton;
+       
+        public IWebElement getFrom() {  return From;  }
+        public IWebElement getFromLocation() {  return FromLocation;  }
+        public IWebElement getTo() {  return To;  }
+        public IWebElement getToLocation() {  return ToLocation;  }
+        public IWebElement getDateButton() {  return DateButton;  }
+        public IWebElement getDatePick() {  return DatePick;  }
+        public IWebElement getSearchButton() {  return Searchbutton;  }
+    }
+}
+----------------RedBusClass---------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using RedbusProject.Utilities;
+using RedbusProject.PageObject;
+using OpenQA.Selenium.Interactions;
+
+namespace RedbusProject.Tests
+{
+    public class RedbusClass:BaseClass
+    {
+        [Test]
+        public void ReBusTest()
+        {
+            POMClass pc = new POMClass(getDriver());
+            pc.getFrom().SendKeys("Bang");
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(5));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//text[text()='Bangalore']")));
+            pc.getFromLocation().Click();
+            pc.getTo().SendKeys("Kur");
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//text[text()='Kurnool']")));
+            //driver.FindElement(By.XPath("//text[text()='Kurnool']")).Click();
+            pc.getToLocation().Click();
+            //driver.FindElement(By.XPath("//div[@class='DatePicker__MainBlock-sc-1kf43k8-1 hHKFiR']//child::div[@class='DayNavigator__IconBlock-qj8jdz-2 iZpveD'][3]")).Click();
+            pc.getDateButton().Click();
+            IWebElement wb = pc.getDateButton();
+           /* Actions a = new Actions(driver);
+            a.DoubleClick().Perform();*/
+            //driver.FindElement(By.XPath("//span[text()='12']")).Click();
+            pc.getDatePick().Click();
+            //driver.FindElement(By.XPath("//button[@id='search_button']")).Click();
+            pc.getSearchButton().Click();
+        }
+    }
+}
+------------------RedBusClass with out POM--------------------
+ [Test]
+        public void Testing()
+        {
+            IWebElement element = driver.FindElement(By.XPath("//img[@title='UPSRTC Bus Online Booking']"));
+            IWebElement e = driver.FindElement(By.XPath("//a[@class='PrivatePartners__ViewAll-sc-2695bf-2 dmxFif']"));
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("arguments[0].scrollIntoView(true)", element);
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(5));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(e));
+            e.Click();
+            driver.FindElement(By.XPath("//ul[@class='D112_ul']/descendant::a[9]")).Click();
+            driver.FindElement(By.XPath("//ul[@class='D112_ul']/descendant::a[18]")).Click();
+            driver.FindElement(By.XPath("//ul[@class='D112_ul']/descendant::a[1]")).Click();
+            IWebElement p = driver.FindElement(By.XPath("//a[@class='D113_button '][2]"));
+            js.ExecuteScript("arguments[0].scrollIntoView(true)", p);
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath("//a[normalize-space()='3']")));
+            driver.FindElement(By.XPath("//a[text()='3']")).Click();
+        }
+        -----------------RedBus---------------
+         [Test]
+        public void RedBusTest()
+        {
+            POMClass p = new POMClass(getDriver());
+            IWebElement element = p.getImageButton();
+            IWebElement e = p.getViewAllButton();
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+
+            js.ExecuteScript("window.scrollTo(0, document.body.scrollHeight);");
+
+            js.ExecuteScript("arguments[0].scrollIntoView(true)", element);
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(5));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(e));
+            e.Click();
+            Thread.Sleep(2000);
+            p.getIButton().Click();
+            Thread.Sleep(2000);
+            p.getRButton().Click();
+            Thread.Sleep(2000);
+            p.getAButton().Click();
+            //IWebElement l = p.getPaginationNumber();
+            //js.ExecuteScript("arguments[0].scrollIntoView(true)", l);
+            //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(p.getPage3()));
+            //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            //js.ExecuteScript("window.scrollBy(0,4800)", "");
+            Thread.Sleep(3000);           
+            p.getPage3().Click();
+            Thread.Sleep(2000);
+        }
+
+          [Test]
+        public void InvalidPassword()
+        {
+            LoginPage lp=new LoginPage(getDriver());
+            lp.getLogin().Click();
+            lp.getUserName().SendKeys(Constants.usernamevalue);
+            lp.getPassword().SendKeys(Constants.wrongpassword);
+            lp.getLoginButton().Click();
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(5));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+            string actualpassword = Constants.passwordvalue;
+            string password = Constants.wrongpassword;
+            string alertMessage = driver.SwitchTo().Alert().Text;
+            Assert.AreEqual(actualpassword, password);
+        }
+        -------------------------------------------
+         POMClass p = new POMClass(getDriver());
+            IWebElement image = p.getImageButton();
+            IWebElement v = p.getViewAllButton();
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("arguments[0].scrollIntoView(true)",image);
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(20));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(v));
+            v.Click();
+            p.getIButton().Click();
+            PrintValues();
+            p.getRButton().Click();
+            IWebElement wb = p.getPage3();
+            js.ExecuteScript("arguments[0].scrollIntoView(true);",wb);
+            Thread.Sleep(2000);
+            p.getPage3().Click();
+            PrintValues();
+            p.getAButton().Click();
+          ---------------------------------------------------------
+          Autosuggestive Dropdowns
+          driver.FindElement(By.Id("autocomplete")).SendKeys("Ind");
+
+          IList<IWebElement> options = driver.FindElement(By.CssSelector("select.form-control"));
+           foreach (IWebElement option in options)
+            {
+                if (option.Text.Equals("India"))
+                {
+                    option.Click();
+                }
+            }
+            SelectElement s = new SelectElement(dropdown);
+            s.SelectByValue("teach");
+            driver.FindElement(By.XPath("//div[@class='form-group'][5]/label/span/input")).Click();
+            driver.FindElement(By.Name("signin")).Click();
+            ---------------------------------------------------------
+             [Test]
+        public void ActionClassTest() 
+        {
+            driver.Url = "https://www.jntua.ac.in/";
+            IWebElement element = driver.FindElement(By.LinkText("Directorates"));
+            Actions actions = new Actions(driver);
+            actions.MoveToElement(element).Build().Perform();
+            driver.FindElement(By.XPath("//h6[text()='EXAMINATIONS']")).Click();
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("window.scrollBy(0,900)", "");
+            driver.FindElement(By.XPath("//td[text()='Cat']/preceding-sibling::td/child::input")).Click();
+            IWebElement wb = driver.FindElement(By.XPath("//button[@ondblclick='myFunction()']"));
+            actions.DoubleClick(wb).Perform();
+            driver.SwitchTo().Alert().Accept();
+        }
+        ----------------------------------------------------------------
+        //handling frames
+        [Test]
+        public void FramesTest()
+        {
+            driver.Url = "https://rahulshettyacademy.com/AutomationPractice/";
+            IWebElement frameScroll=driver.FindElement(By.Id("courses-iframe"));
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("arguments[0].scrollIntoView(true)", frameScroll);
+            driver.SwitchTo().Frame("courses-iframe");
+            driver.FindElement(By.LinkText("All Access plan")).Click();
+        }
